@@ -104,18 +104,18 @@ document
         }
     });
 
-// Function check duration
-sliderBtn.addEventListener("click", function () {
+function slider1() {
     let duration = document.getElementById("duration").value;
     if (duration < 0) {
         alert("Duration cannot be negative");
         return;
-    } else if (duration == " ") {
+    } else if (duration == "") {
         duration = 1000;
+        createSlider(duration);
     } else {
         createSlider(duration);
     }
-});
+};
 
 //Function CreateSlider
 var timer;
