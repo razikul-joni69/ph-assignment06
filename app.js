@@ -12,7 +12,46 @@ let sliders = [];
 // to create your own api key
 const KEY = "15674931-a9d714b6e9d654524df198e00&q";
 
-// show images
+//add search Enter Button functionality
+document
+    .getElementById("search")
+    .addEventListener("keypress", function (event) {
+        if (event.key == "Enter") {
+            document.getElementById("search-btn").click();
+        }
+    });
+
+//add image slider button Enter Button functionality
+document
+    .getElementById("doration")
+    .addEventListener("keypress", function (event) {
+        if (event.key == "Enter") {
+            document.getElementById("create-slider").click();
+        }
+    });
+
+//Function getImages
+const getImages = (query) => {
+    fetch(
+        `https://pixabay.com/api/?key=${KEY}&q=${query}&image_type=photo&pretty=true`
+    )
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.hits.length !== 0) {
+                fetch(
+                    `https://pixabay.com/api/?key=${KEY}&q=${query}&image_type=photo&pretty=true`
+                )
+                    .then((response) => response.json())
+                    .then((data) => showImages(data.hits))
+                    .catch((err) => console.log(err));
+            } else {
+                location.reload();
+                alert("Hey, No image found, please search again");
+            }
+        });
+};
+
+// Function show images
 const showImages = (images) => {
     imagesArea.style.display = "block";
     gallery.innerHTML = "";
@@ -21,18 +60,10 @@ const showImages = (images) => {
     images.forEach((image) => {
         let div = document.createElement("div");
         div.className = "col-lg-3 col-md-4 col-xs-6 img-item mb-2";
-        div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
+        div.innerHTML = ` <img class="img-fluid img-thumbnail " onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
         gallery.appendChild(div);
     });
-};
-
-const getImages = (query) => {
-    fetch(
-        `https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`
-    )
-        .then((response) => response.json())
-        .then((data) => showImages(data.hitS))
-        .catch((err) => console.log(err));
+    toggleSpinner(false);
 };
 
 let slideIndex = 0;
@@ -60,14 +91,13 @@ const createSlider = () => {
     prevNext.className =
         "prev-next d-flex w-100 justify-content-between align-items-center";
     prevNext.innerHTML = ` 
-  <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
-  <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>
-  `;
+            <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
+            <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>`;
 
     sliderContainer.appendChild(prevNext);
     document.querySelector(".main").style.display = "block";
     // hide image aria
-    imagesArea.style.display = "none";
+    imagesArea.style.display = "block";
     const duration = document.getElementById("duration").value || 1000;
     sliders.forEach((slide) => {
         let item = document.createElement("div");
