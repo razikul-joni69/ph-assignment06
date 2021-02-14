@@ -32,6 +32,7 @@ document
 
 //Function getImages
 const getImages = (query) => {
+    toggleSpinner();
     fetch(
         `https://pixabay.com/api/?key=${KEY}&q=${query}&image_type=photo&pretty=true`
     )
@@ -63,8 +64,16 @@ const showImages = (images) => {
         div.innerHTML = ` <img class="img-fluid img-thumbnail " onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
         gallery.appendChild(div);
     });
-    toggleSpinner(false);
+    toggleSpinner();
 };
+
+//show spinner
+const toggleSpinner = () => {
+    const spinner = document.getElementById("loading-spinner")
+    spinner.classList.toggle("d-none")
+    const songs = gallery;
+    songs.classList.toggle("d-none")
+}
 
 let slideIndex = 0;
 const selectItem = (event, img) => {
@@ -89,11 +98,10 @@ const createSlider = () => {
     sliderContainer.innerHTML = "";
     const prevNext = document.createElement("div");
     prevNext.className =
-        "prev-next d-flex w-100 justify-content-between align-items-center";
+                        "prev-next d-flex w-100 justify-content-between align-items-center";
     prevNext.innerHTML = ` 
-            <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
-            <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>`;
-
+                        <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
+                        <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>`;
     sliderContainer.appendChild(prevNext);
     document.querySelector(".main").style.display = "block";
     // hide image aria
@@ -103,8 +111,8 @@ const createSlider = () => {
         let item = document.createElement("div");
         item.className = "slider-item";
         item.innerHTML = `<img class="w-100"
-    src="${slide}"
-    alt="">`;
+                            src="${slide}"
+                            alt="">`;
         sliderContainer.appendChild(item);
     });
     changeSlide(0);
