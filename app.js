@@ -68,21 +68,12 @@ const showImages = (images) => {
     galleryHeader.style.display = "flex";
     images.forEach((image) => {
         let div = document.createElement("div");
-        div.className = "col-lg-3 col-md-4 col-xs-6 img-item mb-2";
+        div.className = "col-lg-3 col-md-4 col-xs-6 img-item mb-3";
         div.innerHTML = ` <img class="img-fluid img-thumbnail " onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
         gallery.appendChild(div);
     });
     toggleSpinner();
 };
-
-//add image slider button Enter Button functionality
-document
-    .getElementById("duration")
-    .addEventListener("keypress", function (event) {
-        if (event.key == "Enter") {
-            document.getElementById("create-slider").click();
-        }
-    });
 
 //Function selectItem
 let slideIndex = 0;
@@ -104,31 +95,24 @@ const selectItem = (event, img) => {
     }
 };
 
+//add image slider button Enter Button functionality
+document
+    .getElementById("duration")
+    .addEventListener("keypress", function (event) {
+        if (event.key == "Enter") {
+            document.getElementById("create-slider").click();
+        }
+    });
+
 // Function check duration
-let duration = document.getElementById("duration").value;
-const checkDuration = () => {
-    // let duration = document.getElementById("duration").value;
-    // Add a condition to make sure duration is > 0 || Not Negative
-    // const duration = document.getElementById('duration-input').value;
-
-    if (duration < 0) {
-        alert("Duration cannot be negative");
-        return;
-    } else if (duration == "") {
-        duration = 1000;
-    } else{
-        createSlider(duration);
-    }
-};
-//
-
 sliderBtn.addEventListener("click", function () {
+    let duration = document.getElementById("duration").value;
     if (duration < 0) {
         alert("Duration cannot be negative");
         return;
-    } else if (duration == "") {
+    } else if (duration == " ") {
         duration = 1000;
-    } else{
+    } else {
         createSlider(duration);
     }
 });
@@ -136,6 +120,7 @@ sliderBtn.addEventListener("click", function () {
 //Function CreateSlider
 var timer;
 const createSlider = (duration) => {
+    toggleSpinner();
     // check slider image length
     if (sliders.length < 2) {
         alert("Select at least 2 image.");
@@ -167,6 +152,7 @@ const createSlider = (duration) => {
         slideIndex++;
         changeSlide(slideIndex);
     }, duration);
+    toggleSpinner();
 };
 
 // change slider index

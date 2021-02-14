@@ -5,7 +5,9 @@
   margin: 0 auto;
   position: relative;
 }
-
+.row.gallery img {
+  height: 180px;
+}
 .gallery-header {
   display: none;
 }
