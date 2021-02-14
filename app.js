@@ -21,14 +21,14 @@ document
         }
     });
 
-//add image slider button Enter Button functionality
-document
-    .getElementById("doration")
-    .addEventListener("keypress", function (event) {
-        if (event.key == "Enter") {
-            document.getElementById("create-slider").click();
-        }
-    });
+//function to get search string and pass getImages
+searchBtn.addEventListener("click", function () {
+    document.querySelector(".main").style.display = "none";
+    clearInterval(timer);
+    const search = document.getElementById("search");
+    getImages(search.value);
+    sliders.length = 0;
+});
 
 //Function getImages
 const getImages = (query) => {
@@ -47,9 +47,17 @@ const getImages = (query) => {
                     .catch((err) => console.log(err));
             } else {
                 location.reload();
-                alert("Hey, No image found, please search again");
+                alert("No image found, please search again");
             }
         });
+};
+
+//show spinner
+const toggleSpinner = () => {
+    const spinner = document.getElementById("loading-spinner");
+    spinner.classList.toggle("d-none");
+    const songs = gallery;
+    songs.classList.toggle("d-none");
 };
 
 // Function show images
@@ -67,28 +75,67 @@ const showImages = (images) => {
     toggleSpinner();
 };
 
-//show spinner
-const toggleSpinner = () => {
-    const spinner = document.getElementById("loading-spinner")
-    spinner.classList.toggle("d-none")
-    const songs = gallery;
-    songs.classList.toggle("d-none")
-}
+//add image slider button Enter Button functionality
+document
+    .getElementById("duration")
+    .addEventListener("keypress", function (event) {
+        if (event.key == "Enter") {
+            document.getElementById("create-slider").click();
+        }
+    });
 
+//Function selectItem
 let slideIndex = 0;
 const selectItem = (event, img) => {
     let element = event.target;
-    element.classList.add("added");
+
+    if (!event.target.classList.contains("added")) {
+        element.classList.add("added");
+    } else {
+        element.classList.remove("added");
+    }
 
     let item = sliders.indexOf(img);
+
     if (item === -1) {
         sliders.push(img);
-    } else {
-        alert("Hey, Already added !");
+    } else if (item !== -1) {
+        sliders.pop(img);
     }
 };
+
+// Function check duration
+let duration = document.getElementById("duration").value;
+const checkDuration = () => {
+    // let duration = document.getElementById("duration").value;
+    // Add a condition to make sure duration is > 0 || Not Negative
+    // const duration = document.getElementById('duration-input').value;
+
+    if (duration < 0) {
+        alert("Duration cannot be negative");
+        return;
+    } else if (duration == "") {
+        duration = 1000;
+    } else{
+        createSlider(duration);
+    }
+};
+//
+
+sliderBtn.addEventListener("click", function () {
+    if (duration < 0) {
+        alert("Duration cannot be negative");
+        return;
+    } else if (duration == "") {
+        duration = 1000;
+    } else{
+        createSlider(duration);
+    }
+});
+
+//Function CreateSlider
 var timer;
-const createSlider = () => {
+const createSlider = (duration) => {
     // check slider image length
     if (sliders.length < 2) {
         alert("Select at least 2 image.");
@@ -98,21 +145,21 @@ const createSlider = () => {
     sliderContainer.innerHTML = "";
     const prevNext = document.createElement("div");
     prevNext.className =
-                        "prev-next d-flex w-100 justify-content-between align-items-center";
+        "prev-next d-flex w-100 justify-content-between align-items-center";
     prevNext.innerHTML = ` 
                         <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
                         <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>`;
     sliderContainer.appendChild(prevNext);
     document.querySelector(".main").style.display = "block";
     // hide image aria
-    imagesArea.style.display = "block";
-    const duration = document.getElementById("duration").value || 1000;
+    imagesArea.style.display = "none";
+
     sliders.forEach((slide) => {
         let item = document.createElement("div");
         item.className = "slider-item";
         item.innerHTML = `<img class="w-100"
-                            src="${slide}"
-                            alt="">`;
+                        src="${slide}"
+                        alt="">`;
         sliderContainer.appendChild(item);
     });
     changeSlide(0);
@@ -146,15 +193,3 @@ const changeSlide = (index) => {
 
     items[index].style.display = "block";
 };
-
-searchBtn.addEventListener("click", function () {
-    document.querySelector(".main").style.display = "none";
-    clearInterval(timer);
-    const search = document.getElementById("search");
-    getImages(search.value);
-    sliders.length = 0;
-});
-
-sliderBtn.addEventListener("click", function () {
-    createSlider();
-});
